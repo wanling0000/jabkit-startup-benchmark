@@ -1,4 +1,4 @@
-]1341;command_started;command=68656164202d3220616c6c2d6a646b732d737461727475702e6d64| Command | Mean [s] | Min [s] | Max [s] | Relative |
+| Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
 | `microsoft-25.0.3` | 3.762 ± 0.377 | 3.366 | 4.632 | 1.00 |
 | `temurin-25.0.3+9.0.LTS` | 3.823 ± 0.440 | 3.298 | 5.164 | 1.02 ± 0.16 |
