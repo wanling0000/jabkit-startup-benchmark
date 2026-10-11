@@ -35,13 +35,17 @@ JAR="$WORK_DIR/$JAR_NAME"
 
 # Isolated JBang home, so its download footprint can be measured from empty.
 export JBANG_DIR="$WORK_DIR/jbang"
+jbang trust add https://github.com/JabRef/
 jbang app install --force jabkit@jabref
 JBANG_JABKIT="$JBANG_DIR/bin/jabkit"
+# The JDK JBang downloaded; reused for java -jar so that row isolates JBang's own overhead.
+JAVA="$(jbang jdk home 25)/bin/java"
 
 # Fail early if any variant does not run at all.
 "$NATIVE" --help >/dev/null
 "$PORTABLE" --help >/dev/null
 "$JBANG_JABKIT" --help >/dev/null
+"$JAVA" -jar "$JAR" --help >/dev/null
 
 {
   echo "date:          $(date -Iseconds)"
@@ -53,11 +57,7 @@ JBANG_JABKIT="$JBANG_DIR/bin/jabkit"
   echo "virtualized:   $(systemd-detect-virt 2>/dev/null || echo unknown)"
   echo "hyperfine:     $(hyperfine --version)"
   echo "jbang:         $(jbang version 2>&1 | tail -1)"
-  if command -v java >/dev/null; then
-    echo "system java:   $(java -version 2>&1 | head -1)"
-  else
-    echo "system java:   none"
-  fi
+  echo "java -jar JDK: $("$JAVA" -version 2>&1 | head -1)"
 } | tee "$OUT_DIR/env.txt"
 
 size() { du -sh --apparent-size "$1" | cut -f1; }
@@ -74,10 +74,8 @@ ARGS=(
   -n "native image" "'$NATIVE' --help >/dev/null"
   -n "jpackage portable" "'$PORTABLE' --help >/dev/null"
   -n "JBang (jabkit@jabref)" "'$JBANG_JABKIT' --help >/dev/null"
+  -n "java -jar (JBang's JDK 25)" "'$JAVA' -jar '$JAR' --help >/dev/null"
 )
-if command -v java >/dev/null; then
-  ARGS+=(-n "java -jar (system JDK)" "java -jar '$JAR' --help >/dev/null")
-fi
 
 hyperfine --warmup 10 --min-runs 30 \
   --export-markdown "$OUT_DIR/startup.md" \
