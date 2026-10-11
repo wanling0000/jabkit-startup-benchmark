@@ -6,8 +6,9 @@ JDK_LIST="${JDK_LIST:-/tmp/jabref-java25-jdks.txt}"
 COMMAND_DIR="${COMMAND_DIR:-/tmp/jabref-jdk-benchmark-commands}"
 RESULT_PREFIX="${RESULT_PREFIX:-all-jdks-clean}"
 
-JAR="$(ls "$JABREF_DIR"/jabkit/build/libs/jabkit-*-all.jar 2>/dev/null | head -1)"
-NATIVE="$JABREF_DIR/jabkit/build/native/nativeCompile/jabkit"
+# JAR and NATIVE can point at prebuilt artifacts (e.g. the ones bench-jbang-vs-native.sh downloaded).
+JAR="${JAR:-$(ls "$JABREF_DIR"/jabkit/build/libs/jabkit-*-all.jar 2>/dev/null | head -1)}"
+NATIVE="${NATIVE:-$JABREF_DIR/jabkit/build/native/nativeCompile/jabkit}"
 
 if [ ! -f "$JDK_LIST" ]; then
   echo "Missing $JDK_LIST. Run install-jdks.sh first."
