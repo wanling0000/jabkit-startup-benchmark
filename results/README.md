@@ -67,8 +67,8 @@ Same JabKit fat JAR, run on different Java 25 distributions. To save disk space,
 JDKs run in batches. Every batch also runs the native image as a reference.
 
 Problem: the Azure B2as v2 is a burstable VM. After a few hours of full load, some JVM
-runs jumped from about 4 s to 11–14 s. Most likely the VM ran out of CPU credits. I
-could not get Azure's CPU credit metrics to confirm this.
+runs jumped from about 4 s to 11–14 s. Most likely the VM ran out of CPU credits. Need to
+get Azure's CPU credit metrics to confirm this.
 
 ### Usable results
 
