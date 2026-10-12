@@ -10,11 +10,15 @@
 #   NATIVE      JabKit native image (required)
 #   BATCH_SIZE  JDKs per batch (default 4)
 #   OUT_DIR     where results land (default: results/runtime-sweep-batched-<date>)
+#   PAUSE_FACTOR  after each batch, sleep for (batch duration x PAUSE_FACTOR) so a burstable
+#               VM can earn back CPU credits (default 0, no pause). On an Azure B-series VM
+#               with a 40% baseline, 1.5 roughly refills what a batch of JVM runs used.
 set -euo pipefail
 
 : "${JAR:?Set JAR to the JabKit fat jar}"
 : "${NATIVE:?Set NATIVE to the JabKit native image}"
 BATCH_SIZE="${BATCH_SIZE:-4}"
+PAUSE_FACTOR="${PAUSE_FACTOR:-0}"
 OUT_DIR="${OUT_DIR:-results/runtime-sweep-batched-$(date +%F)}"
 
 mkdir -p "$OUT_DIR"
@@ -35,6 +39,7 @@ echo "Planned ${#JDKS[@]} JDKs in batches of $BATCH_SIZE"
 batch=0
 for ((i = 0; i < ${#JDKS[@]}; i += BATCH_SIZE)); do
   batch=$((batch + 1))
+  batch_start=$SECONDS
   echo
   echo "== Batch $batch: $(df -h / | awk 'NR == 2 {print $4}') free"
 
@@ -71,6 +76,14 @@ for ((i = 0; i < ${#JDKS[@]}; i += BATCH_SIZE)); do
   for version in ${INSTALLED_HERE[@]+"${INSTALLED_HERE[@]}"}; do
     mise uninstall "java@$version" >/dev/null 2>&1 || true
   done
+
+  if ((i + BATCH_SIZE < ${#JDKS[@]})); then
+    pause=$(awk -v d=$((SECONDS - batch_start)) -v f="$PAUSE_FACTOR" 'BEGIN {printf "%d", d * f}')
+    if ((pause > 0)); then
+      echo "Pausing $((pause / 60)) min for CPU credits, next batch at $(date -d "+$pause sec" +%H:%M)"
+      sleep "$pause"
+    fi
+  fi
 done
 
 echo
