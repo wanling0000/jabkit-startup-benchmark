@@ -6,22 +6,24 @@ Startup time and download size of JabKit.
 
 Test run: 2026-10-12, Azure Linux VM.
 
-- Native image: `jabkit --help` takes about 2.2 s.
-- JVM variants: 4.2 to 5.4 s. Native image is about 2x faster.
-- Native image download: 52 MiB (137 MiB unpacked).
+- Native image: `jabkit --help` takes about 2.1 s.
+- JVM variants: 4.0 to 5.3 s. Native image is about 2x faster.
+- Native image download: 51 MiB (136 MiB unpacked).
 - jpackage portable download: 194 MiB (250 MiB unpacked).
+- 29 Java 25 JDKs tested: most take about 4.0 s, the fastest 3.7 s, the slowest 5.0 s.
+  Native image is faster than all of them.
 
 JabKit build: official JabRef `main` build
-[`6.0-beta.184--2026-10-12--b6e8511`](https://github.com/JabRef/jabref/commit/b6e85119ed856fea345ab524de58cb060e5c865b).
+[`6.0-beta.189--2026-10-12--01878ae`](https://github.com/JabRef/jabref/commit/01878ae5cd024b01804d5a4d1b83ad4fc6885537).
 
 ## Distribution comparison
 
 | Variant | Mean startup | Download | Unpacked / installed |
 |:---|---:|---:|---:|
-| Native image | 2.176 ± 0.154 s | 52 MiB | 137 MiB |
-| `java -jar` (JDK 25) | 4.172 ± 0.308 s | 113 MiB | 113 MiB + a JDK |
-| jpackage portable | 4.352 ± 0.268 s | 194 MiB | 250 MiB |
-| JBang (`jabkit@jabref`) | 5.387 ± 0.301 s | — | 437 MiB |
+| Native image | 2.139 ± 0.207 s | 51 MiB | 136 MiB |
+| `java -jar` (JDK 25) | 4.017 ± 0.321 s | 113 MiB | 113 MiB + a JDK |
+| jpackage portable | 4.298 ± 0.424 s | 194 MiB | 250 MiB |
+| JBang (`jabkit@jabref`) | 5.280 ± 0.426 s | — | 437 MiB |
 
 Method: [hyperfine](https://github.com/sharkdp/hyperfine), 10 warmup runs, then 30
 measured runs per variant.
@@ -38,114 +40,121 @@ Findings:
 - Native image is the fastest and has the smallest complete runtime.
 - `java -jar` and jpackage portable are very close. This run cannot tell which one is
   faster.
-- Native image spends about 1.98 s of its 2.2 s as user CPU time (see `startup.json`).
+- Native image spends about 1.94 s of its 2.1 s as user CPU time (see `startup.json`).
   So the time goes into JabKit's own initialization before it parses the command
   line. Native image removes the JVM startup cost. JabKit's initialization cost
   remains. I have not yet checked which part of the initialization is slow.
 
-A separate run on 2026-10-11 (build
-[`4660d5a`](https://github.com/JabRef/jabref/commit/4660d5a82d74ca3f2ff7d30e44858393836891d3))
-gave similar numbers:
+Three runs on three different builds gave similar numbers:
 
-| Variant | 2026-10-11 | 2026-10-12 |
-|:---|---:|---:|
-| Native image | 2.08 s | 2.18 s |
-| `java -jar` | 4.05 s | 4.17 s |
-| jpackage portable | 4.21 s | 4.35 s |
-| JBang | 5.01 s | 5.39 s |
+| Variant | 2026-10-11 (`4660d5a`) | 2026-10-12 (`b6e8511`) | 2026-10-12 (`01878ae`) |
+|:---|---:|---:|---:|
+| Native image | 2.08 s | 2.18 s | 2.14 s |
+| `java -jar` | 4.05 s | 4.17 s | 4.02 s |
+| jpackage portable | 4.21 s | 4.35 s | 4.30 s |
+| JBang | 5.01 s | 5.39 s | 5.28 s |
 
 Data:
 
-- [`distribution-2026-10-12/env.txt`](./distribution-2026-10-12/env.txt)
-- [`distribution-2026-10-12/sizes.md`](./distribution-2026-10-12/sizes.md)
-- [`distribution-2026-10-12/startup.md`](./distribution-2026-10-12/startup.md)
-- [`distribution-2026-10-12/startup.json`](./distribution-2026-10-12/startup.json)
+- [`distribution-2026-10-12-01878ae/`](./distribution-2026-10-12-01878ae/)
+- [`distribution-2026-10-12/`](./distribution-2026-10-12/) (`b6e8511`)
+- [`distribution-2026-10-11/`](./distribution-2026-10-11/) (`4660d5a`)
 
-## Java 25 runtime sweep
+## Java 25 JDK comparison
 
-Same JabKit fat JAR, run on different Java 25 distributions. To save disk space, the
-JDKs run in batches. Every batch also runs the native image as a reference.
+Same JabKit fat JAR, run on every Java 25 distribution mise offers. To save disk space,
+the JDKs run in batches of 4. Every batch also runs the native image as a reference.
+After each batch the script pauses so the VM can recover CPU credits (see "First
+attempt" below).
 
-Problem: the Azure B2as v2 is a burstable VM. After a few hours of full load, some JVM
-runs jumped from about 4 s to 11–14 s. Most likely the VM ran out of CPU credits. Need to
-get Azure's CPU credit metrics to confirm this.
+### Results
 
-### Usable results
+The native image took 2.09–2.15 s in all 12 batches.
 
 | JDK | Batch | Mean [s] | Min [s] | User CPU [s] | vs. native in same batch |
 |:---|---:|---:|---:|---:|---:|
-| native image (6 usable batches) | — | 2.176–2.216 | — | ~1.98 | 1.00 |
-| corretto-25.0.4.10.1 | 1 | 4.151 ± 0.296 | 3.884 | 7.41 | 1.91 |
-| liberica-jre-25.0.4.1+1 | 4 | 4.159 ± 0.289 | 3.951 | 7.41 | 1.90 |
-| jetbrains-jre-25.0.4.1-b635.70 | 3 | 4.168 ± 0.294 | 3.931 | 7.40 | 1.89 |
-| jetbrains-jre-jcef-25.0.4.1-b635.70 | 3 | 4.169 ± 0.278 | 3.979 | 7.43 | 1.89 |
-| liberica-25.0.4.1+1 | 4 | 4.195 ± 0.300 | 3.953 | 7.49 | 1.92 |
-| kona-25.0.4.b1 | 4 | 4.243 ± 0.402 | 3.983 | 7.49 | 1.94 |
-| liberica-lite-25.0.4.1+1 | 5 | 4.379 ± 0.284 | 4.148 | 7.67 | 1.98 |
-| liberica-nik-openjdk25-25.0.4.1+1 | 6 | 4.612 ± 0.281 | 4.364 | 8.26 | 2.12 |
+| semeru-jre-openj9-25.0.4.15 | 8 | 3.723 ± 0.269 | 3.499 | 5.15 | 1.77 |
+| sapmachine-jre-25.0.4.1 | 8 | 3.846 ± 0.335 | 3.647 | 7.01 | 1.83 |
+| sapmachine-25.0.4.1 | 7 | 3.847 ± 0.341 | 3.669 | 7.02 | 1.83 |
+| semeru-openj9-25.0.4.15 | 9 | 3.875 ± 0.278 | 3.647 | 5.32 | 1.84 |
+| openjdk-25.0.2 | 6 | 4.017 ± 0.288 | 3.792 | 7.15 | 1.91 |
+| oracle-25.0.4 | 7 | 4.021 ± 0.269 | 3.832 | 7.14 | 1.91 |
+| dragonwell-25.0.4.0.4.7 | 1 | 4.034 ± 0.300 | 3.847 | 7.18 | 1.92 |
+| zulu-jre-crac-25.36.205.0 | 11 | 4.038 ± 0.292 | 3.850 | 7.19 | 1.93 |
+| zulu-25.36.205.0 | 10 | 4.038 ± 0.405 | 3.787 | 7.19 | 1.92 |
+| zulu-jre-25.36.205.0 | 11 | 4.041 ± 0.412 | 3.809 | 7.20 | 1.93 |
+| kona-25.0.4.b1 | 4 | 4.048 ± 0.284 | 3.840 | 7.22 | 1.91 |
+| temurin-jre-25.0.4+101.0.LTS | 9 | 4.053 ± 0.312 | 3.818 | 7.22 | 1.93 |
+| jetbrains-jcef-25.0.4.1-b635.70 | 2 | 4.059 ± 0.360 | 3.834 | 7.22 | 1.89 |
+| liberica-jre-25.0.4.1+1 | 4 | 4.059 ± 0.305 | 3.873 | 7.22 | 1.92 |
+| zulu-crac-25.36.205.0 | 10 | 4.063 ± 0.286 | 3.807 | 7.23 | 1.93 |
+| jetbrains-25.0.4.1-b635.70 | 2 | 4.066 ± 0.333 | 3.812 | 7.23 | 1.89 |
+| microsoft-25.0.4.1 | 6 | 4.068 ± 0.292 | 3.838 | 7.24 | 1.94 |
+| temurin-25.0.4+101.0.LTS | 9 | 4.068 ± 0.360 | 3.836 | 7.23 | 1.94 |
+| jetbrains-jre-jcef-25.0.4.1-b635.70 | 3 | 4.070 ± 0.278 | 3.862 | 7.25 | 1.94 |
+| mandrel-25.0.4.1-Final+java25 | 6 | 4.074 ± 0.362 | 3.869 | 7.23 | 1.94 |
+| liberica-25.0.4.1+1 | 4 | 4.076 ± 0.359 | 3.874 | 7.25 | 1.93 |
+| jetbrains-jre-25.0.4.1-b635.70 | 3 | 4.079 ± 0.348 | 3.849 | 7.21 | 1.95 |
+| corretto-25.0.4.10.1 | 1 | 4.087 ± 0.421 | 3.855 | 7.22 | 1.95 |
+| liberica-lite-25.0.4.1+1 | 5 | 4.216 ± 0.345 | 3.933 | 7.39 | 2.01 |
+| liberica-nik-openjdk25-25.0.4.1+1 | 6 | 4.482 ± 0.328 | 4.325 | 8.08 | 2.14 |
+| graalvm-community-25.0.2 | 2 | 4.581 ± 0.365 | 4.295 | 8.18 | 2.13 |
+| oracle-graalvm-25.0.4.1.1 | 7 | 4.831 ± 0.382 | 4.592 | 8.83 | 2.30 |
+| oracle-graalvm-innovation-25.0.4.1.1 | 7 | 4.849 ± 0.327 | 4.640 | 8.84 | 2.31 |
+| graalvm-community-innovation-25.0.4.1.1 | 2 | 5.040 ± 0.355 | 4.793 | 9.21 | 2.34 |
 
-- Native image: 2.18–2.22 s in every usable batch.
-- The 8 usable JDKs: 4.15–4.61 s. The differences are too small to rank them.
-- Native image is 1.9–2.1x faster than each of them.
+Findings:
 
-### Excluded results
+- Most JDKs take 4.02–4.09 s. The differences are much smaller than the standard
+  deviation (about 0.3 s), so I do not rank them.
+- The two Semeru JDKs are the fastest and also use clearly less user CPU time (about
+  5.2 s, most others about 7.2 s; see the User CPU column). Semeru uses the OpenJ9 JVM,
+  most other JDKs use HotSpot. This may be why it is faster, but it needs more checking.
+- SapMachine is also a bit faster than most (3.85 s).
+- Native image is faster than every JDK: 1.8x faster than the fastest (OpenJ9), 2.3x
+  faster than the slowest.
 
-A result is excluded if it breaks any rule below. Raw data stays in `batch-N.json`.
+Data: [`runtime-sweep-batched-2026-10-12-01878ae/`](./runtime-sweep-batched-2026-10-12-01878ae/)
+
+### First attempt: disturbed by CPU throttling
+
+The first batched run (build `b6e8511`) had no pauses. The Azure B2as v2 is a burstable
+VM with a 40% CPU baseline. After a few hours of full load, some JVM runs jumped from
+about 4 s to 11–14 s. Most likely the VM ran out of CPU credits. I could not get Azure's
+CPU credit metrics to confirm this.
+
+Example: in one batch, mandrel took about 4.0 s for the first 27 runs, then suddenly
+11–15 s for the last 3.
+
+I used these four rules to find the disturbed results:
 
 | Rule | Condition | What it means |
 |---|---|---|
-| 1. Bad reference | Native mean in this batch is more than 20% above the median native mean (2.188 s) | The whole VM was slow during this batch. Exclude the whole batch. |
+| 1. Bad reference | Native mean in this batch is more than 20% above the median of all batches | The whole VM was slow during this batch. Exclude the whole batch. |
 | 2. Jump | Slowest run is more than 2x the fastest run | Conditions changed during the measurement |
-| 3. Too much CPU time | User time is more than 50% above the median of all JDKs (7.88 s) | Likely CPU throttling after the credits ran out |
+| 3. Too much CPU time | User time is more than 50% above the median of all JDKs | Likely CPU throttling after the credits ran out |
 | 4. Waiting for CPU | Wall time is more than 80% of user time (normal: about 56%) | The process waited a lot for a CPU |
 
-| JDK | Batch | Mean [s] | Rules |
-|:---|---:|---:|---|
-| dragonwell-25.0.4.0.4.7 | 1 | 7.587 | 4 |
-| graalvm-community-25.0.2 | 2 | 7.533 | 1, 4 |
-| graalvm-community-innovation-25.0.4.1.1 | 2 | 7.670 | 1, 4 |
-| jetbrains-25.0.4.1-b635.70 | 2 | 6.167 | 1, 2, 4 |
-| jetbrains-jcef-25.0.4.1-b635.70 | 2 | 4.209 | 1 |
-| mandrel-25.0.4.1-Final+java25 | 6 | 4.965 | 2 |
-| microsoft-25.0.4.1 | 6 | 12.022 | 3 |
-| openjdk-25.0.2 | 6 | 11.865 | 3 |
-| oracle-25.0.4 | 7 | 12.708 | 3 |
-| oracle-graalvm-25.0.4.1.1 | 7 | 14.237 | 3 |
-| oracle-graalvm-innovation-25.0.4.1.1 | 7 | 10.590 | 2, 3 |
-| sapmachine-25.0.4.1 | 7 | 11.311 | 3 |
+Result: of 29 JDKs, 8 were usable, 12 were disturbed, and 9 had not run yet.
 
-- `jetbrains-jcef` looks fine by itself. It is excluded only because of rule 1.
-- I picked the thresholds after looking at this data. They work for this run. They are
-  not tested on other runs.
+In the rerun with pauses between batches, **none of the four rules fired**. The JDKs
+that were disturbed before are back in the normal range. For example, microsoft went
+from 12.0 s back to 4.07 s, and dragonwell from 7.6 s back to 4.03 s.
 
-### Status
-
-- 8 JDKs: usable.
-- 12 JDKs: measured, but disturbed. Need a rerun.
-- 9 JDKs: not run yet (sapmachine-jre, semeru-jre-openj9, semeru-openj9, temurin,
-  temurin-jre, zulu, zulu-crac, zulu-jre, zulu-jre-crac).
-- `-musl` JDKs: skipped. They are for Alpine Linux and cannot run on Ubuntu (glibc).
-
-All raw results are kept. Do not use them to rank JDKs. For a rerun, use a VM with
-fixed CPU performance, a physical machine, or pause between batches so the CPU credits
-can recover.
-
-Data:
-
-- [`runtime-sweep-batched-2026-10-12/`](./runtime-sweep-batched-2026-10-12/)
-- [`runtime-sweep-2026-10-11/`](./runtime-sweep-2026-10-11/)
+Data: [`runtime-sweep-batched-2026-10-12/`](./runtime-sweep-batched-2026-10-12/)
+(`b6e8511`, kept as measured)
 
 ## Test environment
 
 | Item | Value |
 |---|---|
-| Date | 2026-10-12 |
-| JabKit build | `6.0-beta.184--2026-10-12--b6e8511` |
+| Date | 2026-10-12 (started 21:06 UTC, finished the next day) |
+| JabKit build | `6.0-beta.189--2026-10-12--01878ae` |
 | Build source | `builds.jabref.org/main` |
 | VM | Azure Standard B2as v2 |
 | CPU | AMD EPYC 7763, 2 vCPUs |
 | Memory | 8 GiB (7.2 GiB visible to the OS) |
-| OS | Linux 7.0.0-1012-azure x86_64 |
+| OS | Linux 7.0.0-1017-azure x86_64 |
 | hyperfine | 1.19.0 |
 | JBang | 0.142.0 |
 | `java -jar` JDK | OpenJDK 25.0.4.1 |
@@ -161,12 +170,8 @@ Only the points that matter for the conclusions:
   cache. First run is not measured.
 - One 2-vCPU Azure Linux VM only. Other CPUs, physical machines, macOS, Windows and
   ARM may give different numbers.
-- The burstable CPU disturbed the long JDK sweep. Use the sweep for the rough range
-  only.
-- The native reference cannot catch every disturbance. Native image mostly uses one
-  core, which stays under the VM's 40% CPU baseline. So when the credits ran out,
-  native image was almost unaffected. It only caught the slowdown in batch 2, where the
-  whole VM was slow.
+- Burstable CPU: it showed up in the first attempt. The exact CPU credit values are
+  unknown.
 - `builds.jabref.org/main` changes with every upstream commit. To reproduce, check the
   build version in `env.txt`.
 

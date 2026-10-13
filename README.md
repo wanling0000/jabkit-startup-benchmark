@@ -95,10 +95,12 @@ the native image, then uninstalls them. Output: `results/runtime-sweep-batched-<
 
 ## Results
 
-Short version, JabRef `main` build `b6e8511` (2026-10-12):
+Short version, JabRef `main` build `01878ae` (2026-10-12):
 
-- Native image starts in about 2.2 s. The JVM variants take 4.2 to 5.4 s. So native
+- Native image starts in about 2.1 s. The JVM variants take 4.0 to 5.3 s. So native
   image is about 2x faster.
-- Native image is the smallest download: 52 MiB. jpackage portable: 194 MiB.
+- Native image is the smallest download: 51 MiB. jpackage portable: 194 MiB.
+- 29 Java 25 JDKs: most take about 4.0 s (range 3.7 to 5.0 s). Native image is faster
+  than all of them.
 
 Tables, test environment and limitations: [`results/README.md`](results/README.md).
