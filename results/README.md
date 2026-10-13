@@ -73,35 +73,35 @@ The native image took 2.09–2.15 s in all 12 batches.
 
 | JDK | Batch | Mean [s] | Min [s] | User CPU [s] | vs. native in same batch |
 |:---|---:|---:|---:|---:|---:|
-| semeru-jre-openj9-25.0.4.15 | 8 | 3.723 ± 0.269 | 3.499 | 5.15 | 1.77 |
-| sapmachine-jre-25.0.4.1 | 8 | 3.846 ± 0.335 | 3.647 | 7.01 | 1.83 |
-| sapmachine-25.0.4.1 | 7 | 3.847 ± 0.341 | 3.669 | 7.02 | 1.83 |
-| semeru-openj9-25.0.4.15 | 9 | 3.875 ± 0.278 | 3.647 | 5.32 | 1.84 |
-| openjdk-25.0.2 | 6 | 4.017 ± 0.288 | 3.792 | 7.15 | 1.91 |
-| oracle-25.0.4 | 7 | 4.021 ± 0.269 | 3.832 | 7.14 | 1.91 |
-| dragonwell-25.0.4.0.4.7 | 1 | 4.034 ± 0.300 | 3.847 | 7.18 | 1.92 |
-| zulu-jre-crac-25.36.205.0 | 11 | 4.038 ± 0.292 | 3.850 | 7.19 | 1.93 |
-| zulu-25.36.205.0 | 10 | 4.038 ± 0.405 | 3.787 | 7.19 | 1.92 |
-| zulu-jre-25.36.205.0 | 11 | 4.041 ± 0.412 | 3.809 | 7.20 | 1.93 |
-| kona-25.0.4.b1 | 4 | 4.048 ± 0.284 | 3.840 | 7.22 | 1.91 |
-| temurin-jre-25.0.4+101.0.LTS | 9 | 4.053 ± 0.312 | 3.818 | 7.22 | 1.93 |
-| jetbrains-jcef-25.0.4.1-b635.70 | 2 | 4.059 ± 0.360 | 3.834 | 7.22 | 1.89 |
-| liberica-jre-25.0.4.1+1 | 4 | 4.059 ± 0.305 | 3.873 | 7.22 | 1.92 |
-| zulu-crac-25.36.205.0 | 10 | 4.063 ± 0.286 | 3.807 | 7.23 | 1.93 |
-| jetbrains-25.0.4.1-b635.70 | 2 | 4.066 ± 0.333 | 3.812 | 7.23 | 1.89 |
-| microsoft-25.0.4.1 | 6 | 4.068 ± 0.292 | 3.838 | 7.24 | 1.94 |
-| temurin-25.0.4+101.0.LTS | 9 | 4.068 ± 0.360 | 3.836 | 7.23 | 1.94 |
-| jetbrains-jre-jcef-25.0.4.1-b635.70 | 3 | 4.070 ± 0.278 | 3.862 | 7.25 | 1.94 |
-| mandrel-25.0.4.1-Final+java25 | 6 | 4.074 ± 0.362 | 3.869 | 7.23 | 1.94 |
-| liberica-25.0.4.1+1 | 4 | 4.076 ± 0.359 | 3.874 | 7.25 | 1.93 |
-| jetbrains-jre-25.0.4.1-b635.70 | 3 | 4.079 ± 0.348 | 3.849 | 7.21 | 1.95 |
-| corretto-25.0.4.10.1 | 1 | 4.087 ± 0.421 | 3.855 | 7.22 | 1.95 |
-| liberica-lite-25.0.4.1+1 | 5 | 4.216 ± 0.345 | 3.933 | 7.39 | 2.01 |
-| liberica-nik-openjdk25-25.0.4.1+1 | 6 | 4.482 ± 0.328 | 4.325 | 8.08 | 2.14 |
-| graalvm-community-25.0.2 | 2 | 4.581 ± 0.365 | 4.295 | 8.18 | 2.13 |
-| oracle-graalvm-25.0.4.1.1 | 7 | 4.831 ± 0.382 | 4.592 | 8.83 | 2.30 |
-| oracle-graalvm-innovation-25.0.4.1.1 | 7 | 4.849 ± 0.327 | 4.640 | 8.84 | 2.31 |
-| graalvm-community-innovation-25.0.4.1.1 | 2 | 5.040 ± 0.355 | 4.793 | 9.21 | 2.34 |
+| semeru-jre-openj9-25.0.4.15 | [8](./runtime-sweep-batched-2026-10-12-01878ae/batch-8.md) | 3.723 ± 0.269 | 3.499 | 5.15 | 1.77 |
+| sapmachine-jre-25.0.4.1 | [8](./runtime-sweep-batched-2026-10-12-01878ae/batch-8.md) | 3.846 ± 0.335 | 3.647 | 7.01 | 1.83 |
+| sapmachine-25.0.4.1 | [7](./runtime-sweep-batched-2026-10-12-01878ae/batch-7.md) | 3.847 ± 0.341 | 3.669 | 7.02 | 1.83 |
+| semeru-openj9-25.0.4.15 | [9](./runtime-sweep-batched-2026-10-12-01878ae/batch-9.md) | 3.875 ± 0.278 | 3.647 | 5.32 | 1.84 |
+| openjdk-25.0.2 | [6](./runtime-sweep-batched-2026-10-12-01878ae/batch-6.md) | 4.017 ± 0.288 | 3.792 | 7.15 | 1.91 |
+| oracle-25.0.4 | [7](./runtime-sweep-batched-2026-10-12-01878ae/batch-7.md) | 4.021 ± 0.269 | 3.832 | 7.14 | 1.91 |
+| dragonwell-25.0.4.0.4.7 | [1](./runtime-sweep-batched-2026-10-12-01878ae/batch-1.md) | 4.034 ± 0.300 | 3.847 | 7.18 | 1.92 |
+| zulu-jre-crac-25.36.205.0 | [11](./runtime-sweep-batched-2026-10-12-01878ae/batch-11.md) | 4.038 ± 0.292 | 3.850 | 7.19 | 1.93 |
+| zulu-25.36.205.0 | [10](./runtime-sweep-batched-2026-10-12-01878ae/batch-10.md) | 4.038 ± 0.405 | 3.787 | 7.19 | 1.92 |
+| zulu-jre-25.36.205.0 | [11](./runtime-sweep-batched-2026-10-12-01878ae/batch-11.md) | 4.041 ± 0.412 | 3.809 | 7.20 | 1.93 |
+| kona-25.0.4.b1 | [4](./runtime-sweep-batched-2026-10-12-01878ae/batch-4.md) | 4.048 ± 0.284 | 3.840 | 7.22 | 1.91 |
+| temurin-jre-25.0.4+101.0.LTS | [9](./runtime-sweep-batched-2026-10-12-01878ae/batch-9.md) | 4.053 ± 0.312 | 3.818 | 7.22 | 1.93 |
+| jetbrains-jcef-25.0.4.1-b635.70 | [2](./runtime-sweep-batched-2026-10-12-01878ae/batch-2.md) | 4.059 ± 0.360 | 3.834 | 7.22 | 1.89 |
+| liberica-jre-25.0.4.1+1 | [4](./runtime-sweep-batched-2026-10-12-01878ae/batch-4.md) | 4.059 ± 0.305 | 3.873 | 7.22 | 1.92 |
+| zulu-crac-25.36.205.0 | [10](./runtime-sweep-batched-2026-10-12-01878ae/batch-10.md) | 4.063 ± 0.286 | 3.807 | 7.23 | 1.93 |
+| jetbrains-25.0.4.1-b635.70 | [2](./runtime-sweep-batched-2026-10-12-01878ae/batch-2.md) | 4.066 ± 0.333 | 3.812 | 7.23 | 1.89 |
+| microsoft-25.0.4.1 | [6](./runtime-sweep-batched-2026-10-12-01878ae/batch-6.md) | 4.068 ± 0.292 | 3.838 | 7.24 | 1.94 |
+| temurin-25.0.4+101.0.LTS | [9](./runtime-sweep-batched-2026-10-12-01878ae/batch-9.md) | 4.068 ± 0.360 | 3.836 | 7.23 | 1.94 |
+| jetbrains-jre-jcef-25.0.4.1-b635.70 | [3](./runtime-sweep-batched-2026-10-12-01878ae/batch-3.md) | 4.070 ± 0.278 | 3.862 | 7.25 | 1.94 |
+| mandrel-25.0.4.1-Final+java25 | [6](./runtime-sweep-batched-2026-10-12-01878ae/batch-6.md) | 4.074 ± 0.362 | 3.869 | 7.23 | 1.94 |
+| liberica-25.0.4.1+1 | [4](./runtime-sweep-batched-2026-10-12-01878ae/batch-4.md) | 4.076 ± 0.359 | 3.874 | 7.25 | 1.93 |
+| jetbrains-jre-25.0.4.1-b635.70 | [3](./runtime-sweep-batched-2026-10-12-01878ae/batch-3.md) | 4.079 ± 0.348 | 3.849 | 7.21 | 1.95 |
+| corretto-25.0.4.10.1 | [1](./runtime-sweep-batched-2026-10-12-01878ae/batch-1.md) | 4.087 ± 0.421 | 3.855 | 7.22 | 1.95 |
+| liberica-lite-25.0.4.1+1 | [5](./runtime-sweep-batched-2026-10-12-01878ae/batch-5.md) | 4.216 ± 0.345 | 3.933 | 7.39 | 2.01 |
+| liberica-nik-openjdk25-25.0.4.1+1 | [6](./runtime-sweep-batched-2026-10-12-01878ae/batch-6.md) | 4.482 ± 0.328 | 4.325 | 8.08 | 2.14 |
+| graalvm-community-25.0.2 | [2](./runtime-sweep-batched-2026-10-12-01878ae/batch-2.md) | 4.581 ± 0.365 | 4.295 | 8.18 | 2.13 |
+| oracle-graalvm-25.0.4.1.1 | [7](./runtime-sweep-batched-2026-10-12-01878ae/batch-7.md) | 4.831 ± 0.382 | 4.592 | 8.83 | 2.30 |
+| oracle-graalvm-innovation-25.0.4.1.1 | [7](./runtime-sweep-batched-2026-10-12-01878ae/batch-7.md) | 4.849 ± 0.327 | 4.640 | 8.84 | 2.31 |
+| graalvm-community-innovation-25.0.4.1.1 | [2](./runtime-sweep-batched-2026-10-12-01878ae/batch-2.md) | 5.040 ± 0.355 | 4.793 | 9.21 | 2.34 |
 
 Findings:
 
@@ -139,16 +139,16 @@ Result: of 29 JDKs, 8 were usable, 12 were disturbed, and 9 had not run yet.
 
 The 8 usable JDKs and where to find them:
 
-| JDK | Mean [s] | Data |
-|:---|---:|---|
-| corretto-25.0.4.10.1 | 4.151 | [`batch-1`](./runtime-sweep-batched-2026-10-12/batch-1.md) |
-| jetbrains-jre-25.0.4.1-b635.70 | 4.168 | [`batch-3`](./runtime-sweep-batched-2026-10-12/batch-3.md) |
-| jetbrains-jre-jcef-25.0.4.1-b635.70 | 4.169 | [`batch-3`](./runtime-sweep-batched-2026-10-12/batch-3.md) |
-| liberica-jre-25.0.4.1+1 | 4.159 | [`batch-4`](./runtime-sweep-batched-2026-10-12/batch-4.md) |
-| liberica-25.0.4.1+1 | 4.195 | [`batch-4`](./runtime-sweep-batched-2026-10-12/batch-4.md) |
-| kona-25.0.4.b1 | 4.243 | [`batch-4`](./runtime-sweep-batched-2026-10-12/batch-4.md) |
-| liberica-lite-25.0.4.1+1 | 4.379 | [`batch-5`](./runtime-sweep-batched-2026-10-12/batch-5.md) |
-| liberica-nik-openjdk25-25.0.4.1+1 | 4.612 | [`batch-6`](./runtime-sweep-batched-2026-10-12/batch-6.md) |
+| JDK | Batch | Mean [s] |
+|:---|---:|---:|
+| corretto-25.0.4.10.1 | [1](./runtime-sweep-batched-2026-10-12/batch-1.md) | 4.151 |
+| jetbrains-jre-25.0.4.1-b635.70 | [3](./runtime-sweep-batched-2026-10-12/batch-3.md) | 4.168 |
+| jetbrains-jre-jcef-25.0.4.1-b635.70 | [3](./runtime-sweep-batched-2026-10-12/batch-3.md) | 4.169 |
+| liberica-jre-25.0.4.1+1 | [4](./runtime-sweep-batched-2026-10-12/batch-4.md) | 4.159 |
+| liberica-25.0.4.1+1 | [4](./runtime-sweep-batched-2026-10-12/batch-4.md) | 4.195 |
+| kona-25.0.4.b1 | [4](./runtime-sweep-batched-2026-10-12/batch-4.md) | 4.243 |
+| liberica-lite-25.0.4.1+1 | [5](./runtime-sweep-batched-2026-10-12/batch-5.md) | 4.379 |
+| liberica-nik-openjdk25-25.0.4.1+1 | [6](./runtime-sweep-batched-2026-10-12/batch-6.md) | 4.612 |
 
 Each `batch-N.md` has the hyperfine table for that batch. `batch-N.json` next to it has
 the raw run times and CPU times.
