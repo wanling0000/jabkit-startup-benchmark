@@ -137,6 +137,22 @@ I used these four rules to find the disturbed results:
 
 Result: of 29 JDKs, 8 were usable, 12 were disturbed, and 9 had not run yet.
 
+The 8 usable JDKs and where to find them:
+
+| JDK | Mean [s] | Data |
+|:---|---:|---|
+| corretto-25.0.4.10.1 | 4.151 | [`batch-1`](./runtime-sweep-batched-2026-10-12/batch-1.md) |
+| jetbrains-jre-25.0.4.1-b635.70 | 4.168 | [`batch-3`](./runtime-sweep-batched-2026-10-12/batch-3.md) |
+| jetbrains-jre-jcef-25.0.4.1-b635.70 | 4.169 | [`batch-3`](./runtime-sweep-batched-2026-10-12/batch-3.md) |
+| liberica-jre-25.0.4.1+1 | 4.159 | [`batch-4`](./runtime-sweep-batched-2026-10-12/batch-4.md) |
+| liberica-25.0.4.1+1 | 4.195 | [`batch-4`](./runtime-sweep-batched-2026-10-12/batch-4.md) |
+| kona-25.0.4.b1 | 4.243 | [`batch-4`](./runtime-sweep-batched-2026-10-12/batch-4.md) |
+| liberica-lite-25.0.4.1+1 | 4.379 | [`batch-5`](./runtime-sweep-batched-2026-10-12/batch-5.md) |
+| liberica-nik-openjdk25-25.0.4.1+1 | 4.612 | [`batch-6`](./runtime-sweep-batched-2026-10-12/batch-6.md) |
+
+Each `batch-N.md` has the hyperfine table for that batch. `batch-N.json` next to it has
+the raw run times and CPU times.
+
 In the rerun with pauses between batches, **none of the four rules fired**. The JDKs
 that were disturbed before are back in the normal range. For example, microsoft went
 from 12.0 s back to 4.07 s, and dragonwell from 7.6 s back to 4.03 s.
